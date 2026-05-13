@@ -129,7 +129,7 @@ with st.sidebar:
     st.markdown("---")
 
     # Sidebar filters
-    st.markdown("## 🔽 Filters")
+    st.markdown("## Filters")
 
     selected_risk = st.multiselect(
         "Filter by Risk Category",
