@@ -1,18 +1,8 @@
--- =============================================================
--- database/queries/risk_analysis.sql
--- PHASE 2 — RISK ANALYSIS QUERIES
--- PURPOSE: These queries directly support the counseling team.
---          They identify which students need help and why.
---          This is the "business value" of the project.
--- =============================================================
+
 
 USE mental_health_db;
 
--- ─────────────────────────────────────────────────────────────
--- QUERY 1: Full student mental health dashboard view
--- WHY: A single-query summary that a manager or counselor
---      could look at every morning. Clear, readable output.
--- ─────────────────────────────────────────────────────────────
+
 SELECT
     s.student_id,
     s.name,
@@ -35,11 +25,7 @@ FROM students s
 JOIN mental_health_records m ON s.student_id = m.student_id
 ORDER BY m.depression_score DESC, m.anxiety_level DESC;
 
--- ─────────────────────────────────────────────────────────────
--- QUERY 2: High-risk student identification
--- WHY: The counseling team's most important report.
---      Identifies students who need IMMEDIATE intervention.
--- ─────────────────────────────────────────────────────────────
+
 SELECT
     s.name,
     s.age,
@@ -57,11 +43,7 @@ WHERE m.depression_score >= 7
   AND m.anxiety_level >= 7
 ORDER BY m.depression_score DESC;
 
--- ─────────────────────────────────────────────────────────────
--- QUERY 3: Risk distribution — How many in each category?
--- WHY: Management reports always need summary counts.
---      "How many students are at risk this semester?"
--- ─────────────────────────────────────────────────────────────
+
 SELECT
     risk_category,
     COUNT(*) AS student_count,
@@ -78,11 +60,7 @@ FROM (
 GROUP BY risk_category
 ORDER BY FIELD(risk_category, 'High Risk', 'Moderate Risk', 'Healthy');
 
--- ─────────────────────────────────────────────────────────────
--- QUERY 4: Course-level risk summary
--- WHY: Which departments have the most at-risk students?
---      Universities use this to allocate counseling resources.
--- ─────────────────────────────────────────────────────────────
+
 SELECT
     s.course,
     COUNT(*) AS total_students,
@@ -96,11 +74,7 @@ JOIN mental_health_records m ON s.student_id = m.student_id
 GROUP BY s.course
 ORDER BY high_risk_count DESC, avg_depression DESC;
 
--- ─────────────────────────────────────────────────────────────
--- QUERY 5: Sleep deprivation impact analysis
--- WHY: Sleep is the single biggest lifestyle factor.
---      This query proves it with data.
--- ─────────────────────────────────────────────────────────────
+
 SELECT
     CASE
         WHEN m.sleep_hours >= 8   THEN '1. Excellent (8+ hrs)'
@@ -117,11 +91,7 @@ FROM mental_health_records m
 GROUP BY sleep_category
 ORDER BY sleep_category;
 
--- ─────────────────────────────────────────────────────────────
--- QUERY 6: Family support as protective factor
--- WHY: Family support is a "protective factor" in psychology.
---      This query checks if high support → lower risk.
--- ─────────────────────────────────────────────────────────────
+
 SELECT
     CASE
         WHEN m.family_support >= 8 THEN 'High Support (8–10)'
@@ -136,11 +106,7 @@ FROM mental_health_records m
 GROUP BY support_level
 ORDER BY avg_depression ASC;
 
--- ─────────────────────────────────────────────────────────────
--- QUERY 7: Students stored scores after Phase 4 scoring
--- WHY: After Python scoring engine runs, counselors check
---      this table to see final categorized results.
--- ─────────────────────────────────────────────────────────────
+
 SELECT
     s.name,
     s.course,

@@ -1,17 +1,8 @@
--- =============================================================
--- database/queries/analytical_queries.sql
--- PHASE 2 — ANALYTICAL SQL QUERIES
--- PURPOSE: Advanced queries used in real analytics jobs.
---          These go on your resume and in interviews.
--- =============================================================
+
 
 USE mental_health_db;
 
--- ─────────────────────────────────────────────────────────────
--- QUERY 1: CASE WHEN — Classify sleep quality
--- WHY: CASE is SQL's if/else. Used to create new categories
---      from raw numbers. Very common in analytics pipelines.
--- ─────────────────────────────────────────────────────────────
+
 SELECT
     s.name,
     m.sleep_hours,
@@ -27,11 +18,7 @@ FROM students s
 JOIN mental_health_records m ON s.student_id = m.student_id
 ORDER BY m.sleep_hours DESC;
 
--- ─────────────────────────────────────────────────────────────
--- QUERY 2: CASE WHEN — Multi-factor risk flag
--- WHY: Combining multiple conditions into a single risk label
---      is a core task in healthcare and HR analytics.
--- ─────────────────────────────────────────────────────────────
+
 SELECT
     s.name,
     s.course,
@@ -48,11 +35,7 @@ FROM students s
 JOIN mental_health_records m ON s.student_id = m.student_id
 ORDER BY m.depression_score DESC;
 
--- ─────────────────────────────────────────────────────────────
--- QUERY 3: Aggregate Functions — Full parameter summary
--- WHY: Summary stats are always the first step in EDA.
---      MIN, MAX, AVG, STDDEV help understand data spread.
--- ─────────────────────────────────────────────────────────────
+
 SELECT
     ROUND(AVG(sleep_hours), 2)         AS avg_sleep,
     ROUND(MIN(sleep_hours), 2)         AS min_sleep,
@@ -66,10 +49,7 @@ SELECT
     ROUND(AVG(mood_rating), 2)         AS avg_mood
 FROM mental_health_records;
 
--- ─────────────────────────────────────────────────────────────
--- QUERY 4: GROUP BY gender — How gender affects mental health
--- WHY: Gender-based breakdowns are standard in health research.
--- ─────────────────────────────────────────────────────────────
+
 SELECT
     s.gender,
     COUNT(*)                              AS total_students,
@@ -82,13 +62,7 @@ FROM students s
 JOIN mental_health_records m ON s.student_id = m.student_id
 GROUP BY s.gender;
 
--- ─────────────────────────────────────────────────────────────
--- QUERY 5: WINDOW FUNCTION — RANK students by stress level
--- WHY: Window functions are the most powerful SQL feature.
---      RANK() assigns a position to each row within a group
---      without collapsing rows (unlike GROUP BY).
---      This is a TOP interview question.
--- ─────────────────────────────────────────────────────────────
+
 SELECT
     s.name,
     s.course,
@@ -99,11 +73,7 @@ SELECT
 FROM students s
 JOIN mental_health_records m ON s.student_id = m.student_id;
 
--- ─────────────────────────────────────────────────────────────
--- QUERY 6: WINDOW FUNCTION — RANK within course
--- WHY: PARTITION BY divides the ranking by group.
---      "Who is most stressed within Computer Science?"
--- ─────────────────────────────────────────────────────────────
+
 SELECT
     s.name,
     s.course,
@@ -117,11 +87,7 @@ FROM students s
 JOIN mental_health_records m ON s.student_id = m.student_id
 ORDER BY s.course, rank_within_course;
 
--- ─────────────────────────────────────────────────────────────
--- QUERY 7: WINDOW FUNCTION — Running average of stress
--- WHY: AVG() OVER () calculates a rolling/running average.
---      Used in trend analysis and time-series dashboards.
--- ─────────────────────────────────────────────────────────────
+
 SELECT
     s.student_id,
     s.name,
@@ -133,11 +99,7 @@ SELECT
 FROM students s
 JOIN mental_health_records m ON s.student_id = m.student_id;
 
--- ─────────────────────────────────────────────────────────────
--- QUERY 8: Correlation-type — Sleep vs Mood relationship
--- WHY: Correlation analysis shows which factors are related.
---      Companies use this to find root causes of problems.
--- ─────────────────────────────────────────────────────────────
+
 SELECT
     CASE
         WHEN m.sleep_hours >= 7.5 THEN 'High Sleep (7.5+ hrs)'
@@ -153,11 +115,7 @@ FROM mental_health_records m
 GROUP BY sleep_group
 ORDER BY avg_mood DESC;
 
--- ─────────────────────────────────────────────────────────────
--- QUERY 9: Subquery — Students worse than average depression
--- WHY: Subqueries let you use one query's result inside another.
---      Finding "below average" performers is a common business task.
--- ─────────────────────────────────────────────────────────────
+
 SELECT
     s.name,
     s.course,
@@ -171,11 +129,7 @@ WHERE m.depression_score > (
 )
 ORDER BY m.depression_score DESC;
 
--- ─────────────────────────────────────────────────────────────
--- QUERY 10: NTILE — Quartile distribution of mood ratings
--- WHY: NTILE divides students into equal-sized buckets.
---      Used in segmentation and percentile analysis.
--- ─────────────────────────────────────────────────────────────
+
 SELECT
     s.name,
     m.mood_rating,

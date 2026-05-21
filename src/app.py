@@ -1,17 +1,11 @@
-# =================================================
-# app.py
-# PURPOSE: Streamlit web app where users can enter
-#          their mental health data and get their
-#          score and risk category instantly.
-# HOW TO RUN: streamlit run app.py
-# =================================================
+
 
 import streamlit as st
 import numpy as np
 import sys
 import os
 
-# Fix path so Python can find config folder
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, BASE_DIR)
 
@@ -32,21 +26,16 @@ RISK_THRESHOLDS = {
 }
 
 
-# =================================================
-# PAGE CONFIGURATION
-# =================================================
+
 
 st.set_page_config(
     page_title="Student Mental Health Analyzer",
-    page_icon="🧠",
+    page_icon="SMH",
     layout="centered"
 )
 
 
-# =================================================
-# SCORING FUNCTIONS
-# (Same logic as scoring_engine.py)
-# =================================================
+
 
 def normalize_positive(value, min_val, max_val):
     """Higher value = better score."""
@@ -66,10 +55,7 @@ def normalize_negative(value, min_val, max_val):
 
 def compute_score(sleep, stress, anxiety, depression,
                   exercise, support, screen, mood):
-    """
-    Computes mental health score from 8 parameters.
-    Returns score between 0 and 100.
-    """
+    
     w = SCORING_WEIGHTS
 
     score = (
@@ -97,37 +83,35 @@ def classify_risk(score):
 
 
 def get_advice(risk_category):
-    """Returns advice based on risk category."""
+    
     if risk_category == 'Healthy':
         return [
-            "✅ Keep maintaining your sleep schedule",
-            "✅ Continue your exercise routine",
-            "✅ Stay connected with family and friends",
-            "✅ Keep monitoring your mental health regularly"
+            " Keep maintaining your sleep schedule",
+            " Continue your exercise routine",
+            " Stay connected with family and friends",
+            " Keep monitoring your mental health regularly"
         ]
     elif risk_category == 'Moderate Risk':
         return [
-            "⚠️ Try to sleep at least 7-8 hours daily",
-            "⚠️ Exercise at least 3-4 days per week",
-            "⚠️ Reduce screen time before bedtime",
-            "⚠️ Talk to a friend or family member about stress",
-            "⚠️ Consider speaking with a counselor"
+            " Try to sleep at least 7-8 hours daily",
+            " Exercise at least 3-4 days per week",
+            " Reduce screen time before bedtime",
+            " Talk to a friend or family member about stress",
+            " Consider speaking with a counselor"
         ]
     else:
         return [
-            "🚨 Please speak with a counselor immediately",
-            "🚨 Reach out to a trusted family member today",
-            "🚨 Reduce screen time significantly",
-            "🚨 Start with small walks daily for mental relief",
-            "🚨 Remember — asking for help is a sign of strength"
+            " Please speak with a counselor immediately",
+            " Reach out to a trusted family member today",
+            " Reduce screen time significantly",
+            " Start with small walks daily for mental relief",
+            " Remember — asking for help is a sign of strength"
         ]
 
 
-# =================================================
-# APP HEADER
-# =================================================
 
-st.title("🧠 Student Mental Health Analyzer")
+
+st.title(" Student Mental Health Analyzer")
 st.markdown("### Find out your mental health score instantly")
 st.markdown("---")
 st.markdown(
@@ -136,11 +120,9 @@ st.markdown(
 )
 
 
-# =================================================
-# INPUT FORM
-# =================================================
 
-st.markdown("## 📋 Enter Your Details")
+
+st.markdown("##  Enter Your Details")
 
 # Name input
 name = st.text_input(
@@ -154,7 +136,7 @@ st.markdown("---")
 col1, col2 = st.columns(2)
 
 with col1:
-    st.markdown("### 😴 Sleep & Exercise")
+    st.markdown("###  Sleep & Exercise")
 
     sleep = st.slider(
         "Sleep Hours per night",
@@ -191,7 +173,7 @@ with col1:
     )
 
 with col2:
-    st.markdown("### 😰 Stress & Mental Health")
+    st.markdown("###  Stress & Mental Health")
 
     stress = st.slider(
         "Stress Level",
@@ -228,15 +210,12 @@ with col2:
 st.markdown("---")
 
 
-# =================================================
-# ANALYZE BUTTON
-# =================================================
 
-if st.button("🔍 Analyze My Mental Health", use_container_width=True):
+if st.button(" Analyze My Mental Health", use_container_width=True):
 
     # Check if name is entered
     if not name.strip():
-        st.warning("⚠️ Please enter your name before analyzing.")
+        st.warning(" Please enter your name before analyzing.")
 
     else:
         # Compute score
@@ -252,7 +231,7 @@ if st.button("🔍 Analyze My Mental Health", use_container_width=True):
         advice_list = get_advice(risk_category)
 
         st.markdown("---")
-        st.markdown(f"## 📊 Results for {name}")
+        st.markdown(f"##  Results for {name}")
 
         # Score display
         col_score, col_risk = st.columns(2)
@@ -294,43 +273,40 @@ if st.button("🔍 Analyze My Mental Health", use_container_width=True):
             )
 
         # Parameter breakdown
-        st.markdown("### 📈 Your Parameter Breakdown")
+        st.markdown("###  Your Parameter Breakdown")
 
         breakdown_col1, breakdown_col2 = st.columns(2)
 
         with breakdown_col1:
             st.markdown("**Positive Factors**")
-            st.write(f"😴 Sleep Hours       : {sleep} hrs")
-            st.write(f"🏃 Exercise Days     : {exercise} days/week")
-            st.write(f"👨‍👩‍👧 Family Support   : {support} / 10")
-            st.write(f"😊 Mood Rating       : {mood} / 10")
+            st.write(f" Sleep Hours       : {sleep} hrs")
+            st.write(f" Exercise Days     : {exercise} days/week")
+            st.write(f" Family Support   : {support} / 10")
+            st.write(f" Mood Rating       : {mood} / 10")
 
         with breakdown_col2:
             st.markdown("**Negative Factors**")
-            st.write(f"😰 Stress Level      : {stress} / 10")
-            st.write(f"😟 Anxiety Level     : {anxiety} / 10")
-            st.write(f"😔 Depression Score  : {depression} / 10")
-            st.write(f"📱 Screen Time       : {screen} hrs/day")
+            st.write(f" Stress Level      : {stress} / 10")
+            st.write(f" Anxiety Level     : {anxiety} / 10")
+            st.write(f" Depression Score  : {depression} / 10")
+            st.write(f" Screen Time       : {screen} hrs/day")
 
         # Advice section
-        st.markdown("### 💡 Personalized Recommendations")
+        st.markdown("###  Personalized Recommendations")
         for advice in advice_list:
             st.markdown(advice)
 
         st.markdown("---")
         st.caption(
-            "⚠️ Note: This tool is for awareness purposes only. "
+            " Note: This tool is for awareness purposes only. "
             "It is not a medical diagnosis. "
             "Please consult a professional for medical advice."
         )
 
 
-# =================================================
-# SIDEBAR — About the project
-# =================================================
 
 with st.sidebar:
-    st.markdown("## 📌 About This App")
+    st.markdown("##  About This App")
     st.markdown(
         "This app analyzes student mental health "
         "using 8 behavioral parameters and computes "
@@ -338,21 +314,21 @@ with st.sidebar:
     )
 
     st.markdown("---")
-    st.markdown("## 🎯 Risk Categories")
+    st.markdown("##  Risk Categories")
     st.markdown("🟢 **Healthy** → Score ≥ 70")
     st.markdown("🟡 **Moderate Risk** → Score 40–69")
     st.markdown("🔴 **High Risk** → Score < 40")
 
     st.markdown("---")
-    st.markdown("## ⚖️ Parameter Weights")
-    st.markdown("😴 Sleep Hours       → 15%")
-    st.markdown("😰 Stress Level      → 15%")
-    st.markdown("😟 Anxiety Level     → 15%")
-    st.markdown("😔 Depression Score  → 15%")
-    st.markdown("👨‍👩‍👧 Family Support   → 15%")
-    st.markdown("🏃 Exercise Days     → 10%")
-    st.markdown("😊 Mood Rating       → 10%")
-    st.markdown("📱 Screen Time       →  5%")
+    st.markdown("##  Parameter Weights")
+    st.markdown(" Sleep Hours       → 15%")
+    st.markdown(" Stress Level      → 15%")
+    st.markdown(" Anxiety Level     → 15%")
+    st.markdown(" Depression Score  → 15%")
+    st.markdown(" Family Support   → 15%")
+    st.markdown(" Exercise Days     → 10%")
+    st.markdown(" Mood Rating       → 10%")
+    st.markdown(" Screen Time       →  5%")
 
     st.markdown("---")
     st.caption("Built with Python · MySQL · Streamlit")

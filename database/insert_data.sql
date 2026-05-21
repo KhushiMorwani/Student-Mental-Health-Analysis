@@ -84,6 +84,6 @@ VALUES
 (29, 7.5, 4, 3, 3, 4, 7, 4.0, 7, '2024-01-15'),
 (30, 6.5, 5, 5, 4, 3, 6, 5.0, 6, '2024-01-15');
 
--- Confirm insertion
+
 SELECT COUNT(*) AS total_students FROM students;
 SELECT COUNT(*) AS total_records FROM mental_health_records;

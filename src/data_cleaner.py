@@ -1,8 +1,4 @@
-# =================================================
-# src/data_cleaner.py
-# PURPOSE: Cleans and validates the dataset.
-# Real data always has errors — we fix them here.
-# =================================================
+
 import pandas as pd
 import numpy as np
 import sys
@@ -19,27 +15,24 @@ def inspect_data(df):
     print("  DATA INSPECTION REPORT")
     print("="*50)
 
-    print(f"\n📐 Shape: {df.shape[0]} rows × {df.shape[1]} columns")
+    print(f"\n Shape: {df.shape[0]} rows × {df.shape[1]} columns")
 
-    print("\n📋 Column data types:")
+    print("\n Column data types:")
     print(df.dtypes.to_string())
 
-    print("\n🔍 Missing values:")
+    print("\n Missing values:")
     missing = df.isnull().sum()
     if missing.sum() == 0:
-        print("  ✅ No missing values found!")
+        print("   No missing values found!")
     else:
         print(missing[missing > 0])
 
-    print("\n📊 Basic statistics:")
+    print("\n Basic statistics:")
     print(df.describe().round(2).to_string())
 
-    print("\n🔁 Duplicate rows:", df.duplicated().sum())
+    print("\n Duplicate rows:", df.duplicated().sum())
 def handle_missing_values(df):
-    """
-    Fills missing values using median for numbers
-    and mode for text columns.
-    """
+    
     print("\n" + "="*50)
     print("  HANDLING MISSING VALUES")
     print("="*50)
@@ -60,9 +53,9 @@ def handle_missing_values(df):
             if missing > 0:
                 median_val = df_clean[col].median()
                 df_clean[col].fillna(median_val, inplace=True)
-                print(f"  🔧 {col}: filled {missing} missing with median ({median_val})")
+                print(f"   {col}: filled {missing} missing with median ({median_val})")
             else:
-                print(f"  ✅ {col}: no missing values")
+                print(f"   {col}: no missing values")
 
     for col in text_cols:
         if col in df_clean.columns:
@@ -74,9 +67,7 @@ def handle_missing_values(df):
 
     return df_clean
 def fix_data_types(df):
-    """
-    Makes sure each column has the correct data type.
-    """
+    
     print("\n" + "="*50)
     print("  FIXING DATA TYPES")
     print("="*50)
@@ -95,31 +86,26 @@ def fix_data_types(df):
         if col in df_clean.columns:
             df_clean[col] = pd.to_numeric(df_clean[col],
                             errors='coerce').astype('Int64')
-            print(f"  🔄 {col} → Int64")
+            print(f"   {col} → Int64")
 
     for col in float_cols:
         if col in df_clean.columns:
             df_clean[col] = pd.to_numeric(df_clean[col],
                             errors='coerce').astype(float)
-            print(f"  🔄 {col} → float64")
+            print(f"   {col} → float64")
 
     return df_clean
 def remove_duplicates(df):
-    """
-    Removes any duplicate rows from the dataset.
-    """
+    
     before = len(df)
     df_clean = df.drop_duplicates()
     after = len(df_clean)
     removed = before - after
-    print(f"\n🗑️  Duplicates removed: {removed}")
-    print(f"✅ Remaining rows: {after}")
+    print(f"\n  Duplicates removed: {removed}")
+    print(f" Remaining rows: {after}")
     return df_clean
 def clean_pipeline(df):
-    """
-    Runs all cleaning steps in the correct order.
-    This is the main function called by other files.
-    """
+    
     print("\n" + "="*50)
     print("  RUNNING CLEANING PIPELINE")
     print("="*50)
@@ -128,12 +114,9 @@ def clean_pipeline(df):
     df = handle_missing_values(df)
     df = fix_data_types(df)
 
-    print("\n✅ Cleaning pipeline complete!")
+    print("\n Cleaning pipeline complete!")
     return df
-# ================================================
-# Run directly to test:
-# python src/data_cleaner.py
-# ================================================
+
 if __name__ == "__main__":
     print("Loading raw data...")
     df_raw = load_combined_data()
@@ -142,5 +125,5 @@ if __name__ == "__main__":
         inspect_data(df_raw)
         df_cleaned = clean_pipeline(df_raw)
         save_to_csv(df_cleaned, "cleaned_data.csv")
-        print("\n📋 Cleaned data shape:", df_cleaned.shape)
-        print("\n✅ Cleaning complete!")
+        print("\n Cleaned data shape:", df_cleaned.shape)
+        print("\n Cleaning complete!")

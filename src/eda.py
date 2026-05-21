@@ -1,9 +1,4 @@
-# =================================================
-# src/eda.py
-# PURPOSE: Explores and analyzes the cleaned data.
-# EDA = Exploratory Data Analysis
-# We run this BEFORE building the scoring system.
-# =================================================
+
 
 import pandas as pd
 import numpy as np
@@ -24,9 +19,7 @@ HEALTH_PARAMS = [
 
 
 def summary_statistics(df):
-    """
-    Prints full statistics for all health parameters.
-    """
+    
     print("\n" + "="*55)
     print("  SUMMARY STATISTICS")
     print("="*55)
@@ -34,7 +27,7 @@ def summary_statistics(df):
     stats = df[HEALTH_PARAMS].describe().round(2)
     print(stats.to_string())
 
-    print("\n📌 KEY AVERAGES:")
+    print("\n KEY AVERAGES:")
     print(f"  Average sleep:       {df['sleep_hours'].mean():.1f} hrs")
     print(f"  Average stress:      {df['stress_level'].mean():.1f} / 10")
     print(f"  Average depression:  {df['depression_score'].mean():.1f} / 10")
@@ -42,9 +35,7 @@ def summary_statistics(df):
 
 
 def gender_analysis(df):
-    """
-    Compares health parameters between genders.
-    """
+    
     print("\n" + "="*55)
     print("  GENDER BASED ANALYSIS")
     print("="*55)
@@ -54,9 +45,7 @@ def gender_analysis(df):
 
 
 def course_analysis(df):
-    """
-    Shows which courses have highest stress and depression.
-    """
+    
     print("\n" + "="*55)
     print("  COURSE WISE ANALYSIS")
     print("="*55)
@@ -86,7 +75,7 @@ def correlation_analysis(df):
     corr_matrix = df[HEALTH_PARAMS].corr().round(2)
     print(corr_matrix.to_string())
 
-    print("\n📌 KEY CORRELATIONS WITH MOOD:")
+    print("\n KEY CORRELATIONS WITH MOOD:")
     mood_corr = corr_matrix['mood_rating'].sort_values(ascending=False)
     for param, val in mood_corr.items():
         if param != 'mood_rating':
@@ -140,10 +129,7 @@ def top_at_risk(df):
     print(at_risk.to_string(index=False))
 
 
-# ================================================
-# Run directly to test:
-# python src/eda.py
-# ================================================
+
 if __name__ == "__main__":
     print("Loading and cleaning data...")
     df_raw = load_combined_data()
@@ -156,4 +142,4 @@ if __name__ == "__main__":
     risk_distribution(df)
     top_at_risk(df)
 
-    print("\n\n✅ EDA complete!")
+    print("\n\n EDA complete!")

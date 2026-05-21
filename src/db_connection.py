@@ -1,8 +1,4 @@
-# =================================================
-# src/db_connection.py
-# PURPOSE: Connects Python to our MySQL database.
-# Every other Python file will import from here.
-# =================================================
+
 
 import mysql.connector
 from mysql.connector import Error
@@ -27,34 +23,28 @@ def get_connection():
         )
 
         if connection.is_connected():
-            print("✅ Connected to MySQL:", DB_CONFIG["database"])
+            print(" Connected to MySQL:", DB_CONFIG["database"])
             return connection
 
     except Error as e:
-        print(f"❌ Connection failed: {e}")
-        print("🔧 Check: Is MySQL running? Is password correct in config.py?")
+        print(f" Connection failed: {e}")
+        print(" Check: Is MySQL running? Is password correct in config.py?")
         return None
 
 
 def close_connection(connection, cursor=None):
-    """
-    Safely closes the cursor and connection.
-    Always call this after you are done with the database.
-    """
+    
     try:
         if cursor:
             cursor.close()
         if connection and connection.is_connected():
             connection.close()
-            print("🔌 Connection closed.")
+            print(" Connection closed.")
     except Error as e:
         print(f"Error while closing: {e}")
 
 
-# ================================================
-# Run this file directly to test your connection:
-# python src/db_connection.py
-# ================================================
+
 if __name__ == "__main__":
     print("Testing database connection...")
     conn = get_connection()
@@ -63,5 +53,5 @@ if __name__ == "__main__":
         cursor = conn.cursor()
         cursor.execute("SELECT DATABASE();")
         db = cursor.fetchone()
-        print(f"📂 Active database: {db[0]}")
+        print(f" Active database: {db[0]}")
         close_connection(conn, cursor)

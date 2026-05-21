@@ -5,9 +5,7 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.db_connection import get_connection, close_connection
 def load_students():
-    """
-    Loads students table into a Pandas DataFrame.
-    """
+    
     conn = get_connection()
     if conn is None:
         return None
@@ -15,20 +13,17 @@ def load_students():
     try:
         query = "SELECT * FROM students"
         df = pd.read_sql(query, conn)
-        print(f"✅ Loaded students: {df.shape[0]} rows")
+        print(f" Loaded students: {df.shape[0]} rows")
         return df
 
     except Exception as e:
-        print(f"❌ Error loading students: {e}")
+        print(f" Error loading students: {e}")
         return None
 
     finally:
         close_connection(conn)
 def load_combined_data():
-    """
-    Loads students + mental health records together using JOIN.
-    This is the main DataFrame used throughout the project.
-    """
+    
     conn = get_connection()
     if conn is None:
         return None
@@ -67,16 +62,11 @@ def load_combined_data():
     finally:
         close_connection(conn)
 def save_to_csv(df, filename, folder="data/processed/"):
-    """
-    Saves DataFrame to CSV file.
-    """
+    
     path = os.path.join(folder, filename)
     df.to_csv(path, index=False)
-    print(f"💾 Saved to: {path}")
-# ================================================
-# Run directly to test:
-# python src/data_loader.py
-# ================================================
+    print(f" Saved to: {path}")
+
 if __name__ == "__main__":
     print("\n" + "="*50)
     print("  DATA LOADER TEST")
@@ -85,10 +75,10 @@ if __name__ == "__main__":
     df = load_combined_data()
 
     if df is not None:
-        print("\n📋 First 5 rows:")
+        print("\n First 5 rows:")
         print(df.head())
-        print("\n📊 Shape:", df.shape)
-        print("\n🔢 Columns:", list(df.columns))
+        print("\n Shape:", df.shape)
+        print("\n Columns:", list(df.columns))
         save_to_csv(df, "combined_data.csv")
 
-    print("\n✅ Data loading complete!")
+    print("\n Data loading complete!")

@@ -1,20 +1,4 @@
-# =================================================
-# src/scoring_engine.py
-# PURPOSE: Computes mental health score for each
-#          student and classifies into risk category.
-#          Saves results back to MySQL database.
-#
-# SCORING LOGIC:
-#   Positive factors ADD to score:
-#     sleep, exercise, family support, mood
-#   Negative factors SUBTRACT from score:
-#     stress, anxiety, depression, screen time
-#
-#   Final score is between 0 and 100.
-#   >= 70  → Healthy
-#   40-69  → Moderate Risk
-#   < 40   → High Risk
-# =================================================
+
 
 import pandas as pd
 import numpy as np
@@ -28,14 +12,8 @@ from src.data_cleaner import clean_pipeline
 from src.db_connection import get_connection, close_connection
 from config.config import SCORING_WEIGHTS, RISK_THRESHOLDS
 
-
-# =================================================
 # STEP 1 — NORMALIZATION FUNCTIONS
-# WHY: Each parameter has a different scale.
-#      sleep is 4-10 but stress is 1-10.
-#      We convert everything to 0-1 first
-#      so the scoring formula is fair.
-# =================================================
+
 
 def normalize_positive(value, min_val, max_val):
     """
@@ -63,9 +41,9 @@ def normalize_negative(value, min_val, max_val):
     return float(np.clip(result, 0.0, 1.0))
 
 
-# =================================================
+
 # STEP 2 — SCORING FORMULA
-# =================================================
+
 
 def compute_score(row):
     """
@@ -114,9 +92,9 @@ def compute_score(row):
     return float(np.clip(round(score, 2), 0.0, 100.0))
 
 
-# =================================================
+
 # STEP 3 — RISK CLASSIFICATION
-# =================================================
+
 
 def classify_risk(score):
     """
@@ -136,9 +114,9 @@ def classify_risk(score):
         return 'High Risk'
 
 
-# =================================================
+
 # STEP 4 — SCORE ALL STUDENTS
-# =================================================
+
 
 def score_all_students(df):
     """
@@ -174,7 +152,7 @@ def score_all_students(df):
         'mental_health_score', ascending=True
     )
 
-    print(f"\n✅ Scores computed for {len(df_scored)} students")
+    print(f"\n Scores computed for {len(df_scored)} students")
     print(f"   Lowest score:  {df_scored['mental_health_score'].min():.2f}")
     print(f"   Highest score: {df_scored['mental_health_score'].max():.2f}")
     print(f"   Average score: {df_scored['mental_health_score'].mean():.2f}")
@@ -182,9 +160,9 @@ def score_all_students(df):
     return df_scored
 
 
-# =================================================
+
 # STEP 5 — PRINT SCORE REPORT
-# =================================================
+
 
 def print_score_report(df_scored):
     """
@@ -213,11 +191,11 @@ def print_score_report(df_scored):
     counts = df_scored['risk_category'].value_counts()
     total  = len(df_scored)
 
-    print(f"\n  📊 RISK SUMMARY:")
+    print(f"\n   RISK SUMMARY:")
     for category in ['High Risk', 'Moderate Risk', 'Healthy']:
         count = counts.get(category, 0)
         pct   = count / total * 100
-        bar   = '█' * int(pct / 5)
+        bar   =  "" * int(pct / 5)
         print(f"     {category:<15}: {count:>3} students "
               f"({pct:5.1f}%)  {bar}")
 
@@ -225,9 +203,8 @@ def print_score_report(df_scored):
     print(f"  Average score  : {df_scored['mental_health_score'].mean():.1f} / 100")
 
 
-# =================================================
+
 # STEP 6 — SAVE SCORES TO MYSQL
-# =================================================
 
 def save_scores_to_db(df_scored):
     """
@@ -244,17 +221,17 @@ def save_scores_to_db(df_scored):
 
     conn = get_connection()
     if conn is None:
-        print("❌ Cannot save — no DB connection.")
+        print(" Cannot save — no DB connection.")
         return False
 
     try:
         cursor = conn.cursor()
 
-        # Clear old scores first
+        
         cursor.execute("DELETE FROM student_scores")
-        print("  🗑️  Cleared old scores")
+        print("    Cleared old scores")
 
-        # Insert new scores
+        
         insert_query = """
             INSERT INTO student_scores
             (student_id, mental_health_score, risk_category, scored_on)
@@ -272,27 +249,27 @@ def save_scores_to_db(df_scored):
                 scored_on
             ))
 
-        # Insert all records at once
+        
         cursor.executemany(insert_query, records)
         conn.commit()
 
-        print(f"  ✅ Saved {cursor.rowcount} scores to database")
+        print(f"   Saved {cursor.rowcount} scores to database")
 
-        # Verify
+        
         cursor.execute("""
             SELECT risk_category, COUNT(*) as count
             FROM student_scores
             GROUP BY risk_category
         """)
         results = cursor.fetchall()
-        print("\n  📋 Scores saved by category:")
+        print("\n   Scores saved by category:")
         for category, count in results:
             print(f"     {category}: {count} students")
 
         return True
 
     except Exception as e:
-        print(f"  ❌ Error saving scores: {e}")
+        print(f"   Error saving scores: {e}")
         conn.rollback()
         return False
 
@@ -300,20 +277,19 @@ def save_scores_to_db(df_scored):
         close_connection(conn, cursor)
 
 
-# =================================================
 # MAIN PIPELINE — Runs everything
-# =================================================
+
 
 if __name__ == "__main__":
-    print("\n" + "█"*55)
+    print("\n" + ""*55)
     print("  PHASE 4 — MENTAL HEALTH SCORING ENGINE")
-    print("█"*55)
+    print(""*55)
 
     # Step 1: Load data
     print("\nStep 1: Loading data...")
     df_raw = load_combined_data()
     if df_raw is None:
-        print("❌ Could not load data. Exiting.")
+        print(" Could not load data. Exiting.")
         exit(1)
 
     # Step 2: Clean data
@@ -335,8 +311,8 @@ if __name__ == "__main__":
     print("\nStep 6: Saving to MySQL...")
     save_scores_to_db(df_scored)
 
-    print("\n\n" + "█"*55)
-    print("  ✅ PHASE 4 COMPLETE!")
-    print("  📄 Check reports/student_scores.csv")
-    print("  🗄️  Check MySQL table: student_scores")
-    print("█"*55)
+    print("\n\n" + ""*55)
+    print("  PHASE 4 COMPLETE!")
+    print("   Check reports/student_scores.csv")
+    print("    Check MySQL table: student_scores")
+    print(""*55)
