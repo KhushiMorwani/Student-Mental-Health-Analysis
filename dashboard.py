@@ -30,7 +30,7 @@ from config.config import SCORING_WEIGHTS, RISK_THRESHOLDS
 
 st.set_page_config(
     page_title="Student Mental Health Dashboard",
-    page_icon="🧠",
+    page_icon="SMH",
     layout="wide"
 )
 
@@ -103,7 +103,7 @@ def load_data():
 df = load_data()
 
 if df is None:
-    st.error("❌ Cannot connect to database. Check config.py settings.")
+    st.error("Cannot connect to database. Check config.py settings.")
     st.stop()
 
 
@@ -112,17 +112,17 @@ if df is None:
 # =================================================
 
 with st.sidebar:
-    st.markdown("# 🧠 Mental Health")
+    st.markdown("# Mental Health")
     st.markdown("# Dashboard")
     st.markdown("---")
 
     page = st.radio(
         "Navigate to",
         [
-            "📊 Overview",
-            "📋 Student Table",
-            "📈 Charts",
-            "🔍 Student Search",
+            " Overview",
+            " Student Table",
+            " Charts",
+            " Student Search",
         ]
     )
 
@@ -144,10 +144,10 @@ with st.sidebar:
     )
 
     st.markdown("---")
-    st.markdown("## 🎯 Risk Categories")
-    st.markdown("🟢 **Healthy** → Score ≥ 70")
-    st.markdown("🟡 **Moderate** → Score 40–69")
-    st.markdown("🔴 **High Risk** → Score < 40")
+    st.markdown("##  Risk Categories")
+    st.markdown(" **Healthy** → Score ≥ 70")
+    st.markdown(" **Moderate** → Score 40–69")
+    st.markdown(" **High Risk** → Score < 40")
     st.markdown("---")
     st.caption("Built with Python · MySQL · Streamlit")
 
@@ -163,9 +163,9 @@ df_filtered = df[
 # PAGE 1 — OVERVIEW
 # =================================================
 
-if page == "📊 Overview":
+if page == " Overview":
 
-    st.title("📊 Student Mental Health Overview")
+    st.title(" Student Mental Health Overview")
     st.markdown("---")
 
     # Metrics row
@@ -177,15 +177,15 @@ if page == "📊 Overview":
 
     col1, col2, col3, col4, col5 = st.columns(5)
     with col1:
-        st.metric("👥 Total Students", total)
+        st.metric(" Total Students", total)
     with col2:
-        st.metric("🟢 Healthy", healthy)
+        st.metric(" Healthy", healthy)
     with col3:
-        st.metric("🟡 Moderate Risk", moderate)
+        st.metric(" Moderate Risk", moderate)
     with col4:
-        st.metric("🔴 High Risk", high_risk)
+        st.metric(" High Risk", high_risk)
     with col5:
-        st.metric("📊 Avg Score", f"{avg_score:.1f}")
+        st.metric(" Avg Score", f"{avg_score:.1f}")
 
     st.markdown("---")
 
@@ -232,16 +232,16 @@ if page == "📊 Overview":
     st.markdown("---")
 
     # Parameter averages
-    st.markdown("### 📌 Average Parameter Values")
+    st.markdown("###  Average Parameter Values")
     params = {
-        "😴 Sleep Hours":      round(df['sleep_hours'].mean(), 1),
-        "😰 Stress Level":     round(df['stress_level'].mean(), 1),
-        "😟 Anxiety Level":    round(df['anxiety_level'].mean(), 1),
-        "😔 Depression Score": round(df['depression_score'].mean(), 1),
-        "🏃 Exercise Days":    round(df['exercise_days'].mean(), 1),
-        "👨‍👩‍👧 Family Support": round(df['family_support'].mean(), 1),
-        "📱 Screen Time":      round(df['screen_time_hours'].mean(), 1),
-        "😊 Mood Rating":      round(df['mood_rating'].mean(), 1),
+        " Sleep Hours":      round(df['sleep_hours'].mean(), 1),
+        " Stress Level":     round(df['stress_level'].mean(), 1),
+        " Anxiety Level":    round(df['anxiety_level'].mean(), 1),
+        " Depression Score": round(df['depression_score'].mean(), 1),
+        " Exercise Days":    round(df['exercise_days'].mean(), 1),
+        " Family Support": round(df['family_support'].mean(), 1),
+        " Screen Time":      round(df['screen_time_hours'].mean(), 1),
+        " Mood Rating":      round(df['mood_rating'].mean(), 1),
     }
     p1, p2, p3, p4 = st.columns(4)
     cols = [p1, p2, p3, p4]
@@ -254,9 +254,9 @@ if page == "📊 Overview":
 # PAGE 2 — STUDENT TABLE
 # =================================================
 
-elif page == "📋 Student Table":
+elif page == " Student Table":
 
-    st.title("📋 Student Data Table")
+    st.title(" Student Data Table")
     st.markdown("---")
 
     st.markdown(
@@ -306,9 +306,9 @@ elif page == "📋 Student Table":
 # PAGE 3 — CHARTS
 # =================================================
 
-elif page == "📈 Charts":
+elif page == " Charts":
 
-    st.title("📈 Mental Health Analytics")
+    st.title(" Mental Health Analytics")
     st.markdown("---")
 
     # Chart 1 — Score distribution
@@ -395,7 +395,7 @@ elif page == "📈 Charts":
     st.markdown("---")
 
     # Chart 5 — Top 10 at risk
-    st.markdown("### 🔴 Top 10 Most At Risk Students")
+    st.markdown("###  Top 10 Most At Risk Students")
     top_risk = df.nsmallest(10, 'mental_health_score')[[
         'name', 'mental_health_score', 'risk_category', 'course'
     ]]
@@ -420,9 +420,9 @@ elif page == "📈 Charts":
 # PAGE 4 — STUDENT SEARCH
 # =================================================
 
-elif page == "🔍 Student Search":
+elif page == " Student Search":
 
-    st.title("🔍 Search Individual Student")
+    st.title(" Search Individual Student")
     st.markdown("---")
 
     search_name = st.selectbox(
@@ -471,23 +471,23 @@ elif page == "🔍 Student Search":
         pc1, pc2 = st.columns(2)
 
         with pc1:
-            st.markdown("**✅ Positive Factors**")
-            st.write(f"😴 Sleep Hours      : {student['sleep_hours']} hrs")
-            st.write(f"🏃 Exercise Days    : {student['exercise_days']} days/week")
-            st.write(f"👨‍👩‍👧 Family Support  : {student['family_support']} / 10")
-            st.write(f"😊 Mood Rating      : {student['mood_rating']} / 10")
+            st.markdown("** Positive Factors**")
+            st.write(f" Sleep Hours      : {student['sleep_hours']} hrs")
+            st.write(f" Exercise Days    : {student['exercise_days']} days/week")
+            st.write(f" Family Support  : {student['family_support']} / 10")
+            st.write(f" Mood Rating      : {student['mood_rating']} / 10")
 
         with pc2:
-            st.markdown("**⚠️ Negative Factors**")
-            st.write(f"😰 Stress Level     : {student['stress_level']} / 10")
-            st.write(f"😟 Anxiety Level    : {student['anxiety_level']} / 10")
-            st.write(f"😔 Depression Score : {student['depression_score']} / 10")
-            st.write(f"📱 Screen Time      : {student['screen_time_hours']} hrs/day")
+            st.markdown("** Negative Factors**")
+            st.write(f" Stress Level     : {student['stress_level']} / 10")
+            st.write(f" Anxiety Level    : {student['anxiety_level']} / 10")
+            st.write(f" Depression Score : {student['depression_score']} / 10")
+            st.write(f" Screen Time      : {student['screen_time_hours']} hrs/day")
 
         st.markdown("---")
 
         # Radar chart
-        st.markdown("### 📊 Parameter Radar Chart")
+        st.markdown("###  Parameter Radar Chart")
         categories = [
             'Sleep', 'Exercise', 'Family Support', 'Mood',
             'Stress', 'Anxiety', 'Depression', 'Screen Time'
